@@ -48,7 +48,7 @@
 
   }
 
-  Tabit.prototype.eventHandler = function (elem, event) {
+  Tabit.prototype.eventHandler = function (tab, event) {
 
     event.preventDefault();
 
@@ -60,10 +60,10 @@
     var before = this.options.before;
     var after = this.options.after;
 
-    if (this._hasClass(elem, tabActiveClass)) return;
+    if (this._hasClass(tab, tabActiveClass)) return;
 
     // Find content for tab
-    var attrValue = elem.getAttribute(attr);
+    var attrValue = tab.getAttribute(attr);
     var content;
 
     if (attr == 'href') {
@@ -72,19 +72,24 @@
 
     content = this.findContent(attrValue);
 
-    before(this, content);
+    if (before && typeof before === 'function') {
+      before(tab, content);
+    }
 
     // Remove classes from all tabs and content
     this.clearActiveTab();
     this.clearActiveContent();
 
     // Add active class for this tab and content
-    this._addClass(elem, tabActiveClass);
+    this._addClass(tab, tabActiveClass);
     if (content) {
       this._addClass(content, contentActiveClass);
     }
 
-    after(this, content);
+    if (after && typeof after === 'function') {
+      after(tab, content);
+    }
+
   };
 
   Tabit.prototype.bindEvents = function () {
