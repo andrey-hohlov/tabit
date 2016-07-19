@@ -1,0 +1,26 @@
+{
+  "name": "tabit",
+  "description": "Just tabs. Make it where you want.",
+  "main": [
+    "tabit.js"
+  ],
+  "authors": [
+    "Andrey Hohlov"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "tabs"
+  ],
+  "homepage": "https://github.com/andrey-hohlov/tabit",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

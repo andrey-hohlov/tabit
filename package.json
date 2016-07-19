@@ -1,0 +1,30 @@
+{
+  "name": "tabit",
+  "version": "1.0.0",
+  "description": "Just tabs. Make it where you want.",
+  "homepage": "https://github.com/andrey-hohlov/tabit",
+  "author": {
+    "name": "Andrey Hohlov",
+    "email": "andrey@hohlov.pro",
+    "web": "http://hohlov.pro"
+  },
+  "license": "MIT",
+  "main": "tabit.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andrey-hohlov/tabit"
+  },
+  "keywords": [
+    "tabs"
+  ],
+  "bugs": {
+    "url": "https://github.com/andrey-hohlov/tabit/issues"
+  },
+  "devDependencies": {
+    "uglifyjs": "^2.4.10"
+  },
+  "scripts": {
+    "build": "npm run uglifyjs",
+    "uglifyjs": "uglifyjs ./tabit.js -o ./tabit.min.js --comments -m -c "
+  }
+}
