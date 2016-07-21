@@ -31,6 +31,10 @@
     this.tabsArr = this.elem.querySelectorAll(this.options.tabSelector); // TODO: error if empty
     this.contentArr = this.elem.querySelectorAll(this.options.contentSelector); // TODO: error if empty
 
+    // Make array from node list
+    this.tabsArr = Array.prototype.slice.call(this.tabsArr, 0);
+    this.contentArr = Array.prototype.slice.call(this.contentArr, 0);
+
     // Wrapper for correct bind / unbind event
     var $tabit = this;
     this.eventHandlerWrap = function (event) {
