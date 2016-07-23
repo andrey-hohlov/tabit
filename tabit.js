@@ -18,7 +18,8 @@
       tabActiveClass: 'is-active',
       contentActiveClass: 'is-active',
       tabEvent: 'click',
-      active: 1
+      active: 1,
+      toggleDisplay: true
     };
 
     // Merge options with defaults
@@ -47,8 +48,19 @@
     // Add event to tabs
     this.bindEvents();
 
-    // Make active firs or custom tab
-    this._trigger(this.tabsArr[parseInt(this.options.active) - 1], this.options.tabEvent);
+    var activeTabIndex = parseInt(this.options.active) - 1;
+
+    // Hide tabs content if needed
+    if (this.options.toggleDisplay) {
+      this.contentArr.forEach(function (item, i) {
+        if (i != activeTabIndex) {
+          item.style.display = 'none';
+        }
+      })
+    }
+
+    // Make active first or custom tab
+    this._trigger(this.tabsArr[activeTabIndex], this.options.tabEvent);
 
   }
 
@@ -88,6 +100,7 @@
     this._addClass(tab, tabActiveClass);
     if (content) {
       this._addClass(content, contentActiveClass);
+      if (this.options.toggleDisplay) content.style.display = 'block';
     }
 
     if (after && typeof after === 'function') {
@@ -156,6 +169,7 @@
 
       if ($tabit._hasClass(item, className)) {
         $tabit._removeClass(item, className);
+        if ($tabit.options.toggleDisplay) item.style.display = 'none';
         return true;
       }
 
