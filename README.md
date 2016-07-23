@@ -1,5 +1,5 @@
 # Tab it!
-Just tabs. Make it where you want. No dependencies. Lightweight. Customizable. 
+Just javascript tabs. Make it where you want. No dependencies. Lightweight. Customizable. 
 
 
 ## Install
