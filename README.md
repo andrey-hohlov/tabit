@@ -16,10 +16,9 @@ Download
 
 You can download the latest version or checkout all the releases [here](https://github.com/andrey-hohlov/tabit/releases).
 
-## Usage
+## Usage documentation and examples
 
-#### Documentation in progress...
-
+[andrey-hohlov.github.io/tabit/](https://andrey-hohlov.github.io/tabit/)
 
 ## License
 
