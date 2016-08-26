@@ -60,7 +60,9 @@
     }
 
     // Make active first or custom tab
-    this._trigger(this.tabsArr[activeTabIndex], this.options.tabEvent);
+    if (activeTabIndex) {
+      this._trigger(this.tabsArr[activeTabIndex], this.options.tabEvent);
+    }
 
   }
 
