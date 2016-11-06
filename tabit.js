@@ -60,21 +60,16 @@
     }
 
     // Make active first or custom tab
-    if (activeTabIndex) {
-      this._trigger(this.tabsArr[activeTabIndex], this.options.tabEvent);
-    }
+    this._trigger(this.tabsArr[activeTabIndex], this.options.tabEvent);
 
   }
 
   Tabit.prototype.eventHandler = function (tab, event) {
-
     event.preventDefault();
 
     var attr = this.options.tabAttr;
-
     var tabActiveClass = this.options.tabActiveClass;
     var contentActiveClass = this.options.contentActiveClass;
-
     var before = this.options.before;
     var after = this.options.after;
 
