@@ -18,8 +18,9 @@
       tabActiveClass: 'is-active',
       contentActiveClass: 'is-active',
       tabEvent: 'click',
-      active: 1,
-      toggleDisplay: true
+      active: 1, // TODO: set index include zero
+      toggleDisplay: true,
+      closable: false
     };
 
     // Merge options with defaults
@@ -53,15 +54,16 @@
     // Hide tabs content if needed
     if (this.options.toggleDisplay) {
       this.contentArr.forEach(function (item, i) {
-        if (i != activeTabIndex) {
+        if (i !== activeTabIndex) {
           item.style.display = 'none';
         }
       })
     }
 
     // Make active first or custom tab
-    this._trigger(this.tabsArr[activeTabIndex], this.options.tabEvent);
-
+    if (activeTabIndex) {
+      this._trigger(this.tabsArr[activeTabIndex], this.options.tabEvent);
+    }
   }
 
   Tabit.prototype.eventHandler = function (tab, event) {
@@ -72,6 +74,13 @@
     var contentActiveClass = this.options.contentActiveClass;
     var before = this.options.before;
     var after = this.options.after;
+
+
+    if (this.options.closable && this._hasClass(tab, tabActiveClass)) {
+      this.clearActiveTab();
+      this.clearActiveContent();
+      return;
+    }
 
     if (this._hasClass(tab, tabActiveClass)) return;
 
