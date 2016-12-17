@@ -75,14 +75,11 @@
     var before = this.options.before;
     var after = this.options.after;
 
+    var activeTabClick = this._hasClass(tab, tabActiveClass);
 
-    if (this.options.closable && this._hasClass(tab, tabActiveClass)) {
-      this.clearActiveTab();
-      this.clearActiveContent();
+    if (!this.options.closable && activeTabClick) {
       return;
     }
-
-    if (this._hasClass(tab, tabActiveClass)) return;
 
     // Find content for tab
     var attrValue = tab.getAttribute(attr);
@@ -103,16 +100,17 @@
     this.clearActiveContent();
 
     // Add active class for this tab and content
-    this._addClass(tab, tabActiveClass);
-    if (content) {
-      this._addClass(content, contentActiveClass);
-      if (this.options.toggleDisplay) content.style.display = 'block';
+    if (!(this.options.closable && activeTabClick)) {
+      this._addClass(tab, tabActiveClass);
+      if (content) {
+        this._addClass(content, contentActiveClass);
+        if (this.options.toggleDisplay) content.style.display = 'block';
+      }
     }
 
     if (after && typeof after === 'function') {
       after(tab, content);
     }
-
   };
 
   Tabit.prototype.bindEvents = function () {
