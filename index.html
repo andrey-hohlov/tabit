@@ -1,0 +1,277 @@
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabit</title>
+  <script
+    src="http://code.jquery.com/jquery-3.1.1.js"
+    integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+</head>
+<body>
+<section class="jumbotron text-center">
+  <div class="container">
+    <h1 class="jumbotron-heading">Tabit!</h1>
+    <p class="lead text-muted">Just javascript tabs. Make it where you want.<br>No dependencies. Lightweight. Customizable.</p>
+    <p>
+      <a href="#" class="btn btn-primary">Documentation and download</a>
+    </p>
+  </div>
+</section>
+<div class="container mb-5">
+  <h2 class="h1">Examples</h2>
+</div>
+<!-- Default-->
+<div class="container mb-5">
+  <h3 class="mb-3">Default</h3>
+  <div id="tabs-default" class="mb-2">
+    <nav class="btn-group mb-2">
+      <a href="#tabs-default-1" class="btn btn-primary">Tab 1</a>
+      <a href="#tabs-default-2" class="btn btn-primary">Tab 2</a>
+      <a href="#tabs-default-3" class="btn btn-primary">Tab 3</a>
+    </nav>
+    <div id="tabs-default-1" class="card">
+      <span class="card-block">Content of first tab</span>
+    </div>
+    <div id="tabs-default-2" class="card">
+      <span class="card-block">Content of second tab</span>
+    </div>
+    <div id="tabs-default-3" class="card">
+      <span class="card-block">Content of third tab</span>
+    </div>
+  </div>
+</div>
+<!-- Set active-->
+<div class="container mb-5">
+  <h3 class="mb-3">Set active tab</h3>
+  <div id="tabs-set-active" class="mb-2">
+    <nav class="btn-group mb-2">
+      <a href="#tabs-set-active-1" class="btn btn-primary">Tab 1</a>
+      <a href="#tabs-set-active-2" class="btn btn-primary">Tab 2</a>
+      <a href="#tabs-set-active-3" class="btn btn-primary">Tab 3</a>
+    </nav>
+    <div id="tabs-set-active-1" class="card">
+      <span class="card-block">Content of first tab</span>
+    </div>
+    <div id="tabs-set-active-2" class="card">
+      <span class="card-block">Content of second tab</span>
+    </div>
+    <div id="tabs-set-active-3" class="card">
+      <span class="card-block">Content of third tab</span>
+    </div>
+  </div>
+</div>
+<!-- Set event-->
+<div class="container mb-5">
+  <h3 class="mb-3">Change on click or hover</h3>
+  <div id="tabs-set-event" class="mb-2">
+    <nav class="btn-group mb-2">
+      <a href="#tabs-set-event-1" class="btn btn-primary">Tab 1</a>
+      <a href="#tabs-set-event-2" class="btn btn-primary">Tab 2</a>
+      <a href="#tabs-set-event-3" class="btn btn-primary">Tab 3</a>
+    </nav>
+    <div id="tabs-set-event-1" class="card">
+      <span class="card-block">Content of first tab</span>
+    </div>
+    <div id="tabs-set-event-2" class="card">
+      <span class="card-block">Content of second tab</span>
+    </div>
+    <div id="tabs-set-event-3" class="card">
+      <span class="card-block">Content of third tab</span>
+    </div>
+  </div>
+  <i class="small">You can set multiple events. Supports: click, mouseover.</i>
+</div>
+<!-- Closable-->
+<div class="container mb-5">
+  <h3 class="mb-3">Closable</h3>
+  <div id="tabs-closable" class="mb-2">
+    <nav class="btn-group mb-2">
+      <a href="#tabs-closable-1" class="btn btn-primary">Tab 1</a>
+      <a href="#tabs-closable-2" class="btn btn-primary">Tab 2</a>
+      <a href="#tabs-closable-3" class="btn btn-primary">Tab 3</a>
+    </nav>
+    <div id="tabs-closable-1" class="card">
+      <span class="card-block">Content of first tab</span>
+    </div>
+    <div id="tabs-closable-2" class="card">
+      <span class="card-block">Content of second tab</span>
+    </div>
+    <div id="tabs-closable-3" class="card">
+      <span class="card-block">Content of third tab</span>
+    </div>
+  </div>
+  <i class="small">Click on active tab for close it.</i>
+</div>
+<!-- Manual control -->
+<div class="container mb-5">
+  <h3 class="mb-3">Manual control</h3>
+  <div id="tabs-manual" class="mb-2">
+    <nav class="btn-group mb-2">
+      <a href="#tabs-manual-1" class="btn btn-primary">Tab 1</a>
+      <a href="#tabs-manual-2" class="btn btn-primary">Tab 2</a>
+      <a href="#tabs-manual-3" class="btn btn-primary">Tab 3</a>
+    </nav>
+    <div id="tabs-manual-1" class="card">
+      <span class="card-block">Content of first tab</span>
+    </div>
+    <div id="tabs-manual-2" class="card">
+      <span class="card-block">Content of second tab</span>
+    </div>
+    <div id="tabs-manual-3" class="card">
+      <span class="card-block">Content of third tab</span>
+    </div>
+  </div>
+  <nav class="btn-group">
+    <button type="button" id="tab-prev" class="btn btn-secondary">Prev</button>
+    <button type="button" id="tab-next" class="btn btn-secondary">Next</button>
+    <button type="button" id="tab-set-2" class="btn btn-secondary">Set 2</button>
+    <button type="button" id="tab-destroy" class="btn btn-secondary">Destroy</button>
+    <button type="button" id="tab-reinit" class="btn btn-secondary">Reinit</button>
+  </nav>
+</div>
+<!-- Animation-->
+<div class="container mb-5">
+  <h3 class="mb-3">Custom hide/show</h3>
+  <div id="tabs-animations" class="mb-2">
+    <nav class="btn-group mb-2">
+      <a href="#tabs-animations-1" class="btn btn-primary">Tab 1</a>
+      <a href="#tabs-animations-2" class="btn btn-primary">Tab 2</a>
+      <a href="#tabs-animations-3" class="btn btn-primary">Tab 3</a>
+    </nav>
+    <div id="tabs-animations-1" class="card">
+      <span class="card-block">Content of first tab</span>
+    </div>
+    <div id="tabs-animations-2" class="card">
+      <span class="card-block">Content of second tab</span>
+    </div>
+    <div id="tabs-animations-3" class="card">
+      <span class="card-block">Content of third tab</span>
+    </div>
+  </div>
+  <i class="small">In example used jQuery for animations.</i>
+</div>
+<!-- Footer -->
+<footer class="pb-5">
+  <div class="container">
+    <div class="small text-right">
+      Made by <a href="http://hohlov.pro" target="_blank">Andrey Hohlov</a>
+    </div>
+  </div>
+</footer>
+<!-- GitHub -->
+<a href="https://github.com/andrey-hohlov/tabit" target="_blank">
+  <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/38ef81f8aca64bb9a64448d0d70f1308ef5341ab/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png">
+</a>
+<script src="dist/Tabit.min.js"></script>
+<script>
+  (function(){
+    /**
+     * Default init
+     */
+
+    var tabsDefault = new Tabit(document.getElementById('tabs-default'), {btnActiveClass: 'active'});
+
+
+    /**
+     * Set active tab
+     */
+
+    var tabsSetActive = new Tabit(document.getElementById('tabs-set-active'), {btnActiveClass: 'active', active: 1});
+
+
+    /**
+     * Set event to tab
+     */
+
+    var tabsSetEvent = new Tabit(document.getElementById('tabs-set-event'), {btnActiveClass: 'active', event: ['click', 'mouseover']});
+
+
+    /**
+     * Closable
+     */
+
+    var tabsClosable = new Tabit(document.getElementById('tabs-closable'), {btnActiveClass: 'active', active: false, closable: true});
+
+
+    /**
+     * Animations
+     */
+
+    var tabsAnimation = new Tabit(
+      document.getElementById('tabs-animations'),
+      {
+        btnActiveClass: 'active',
+        contentActiveClass: false,
+        active: 0,
+        toggleDisplay: false,
+        beforeInit: function (instance) {
+          // Hide all tabs content
+          Array.prototype.forEach.call(instance.tabs, function (item, i) {
+            if (i !== 0) {
+              $(item.contentNode).hide();
+            }
+          });
+        },
+        beforeChange: function (activeTab, newTab, doubleEvent, instance) {
+          var showNew = function () {
+            $(newTab.contentNode).animate({
+              opacity: 'show'
+            }, 400)
+          };
+          if (activeTab) {
+            $(activeTab.contentNode).animate({
+              opacity: 'hide'
+            }, 300, showNew)
+          } else {
+            showNew();
+          }
+        },
+      }
+    );
+
+    /**
+     * Manual control
+     */
+
+
+    var tabsManual;
+
+    function initManualTabs() {
+      tabsManual = new Tabit(
+        document.getElementById('tabs-manual'),
+        {
+          btnActiveClass: 'active',
+          onDestroy: function () {
+            tabsManual = undefined; // don't forget to delete instance (and remove event handlers)
+          }
+        }
+      );
+    }
+
+    initManualTabs();
+
+    document.getElementById('tab-next').addEventListener('click', function () {
+      tabsManual.next();
+    });
+
+    document.getElementById('tab-prev').addEventListener('click', function () {
+      tabsManual.prev();
+    });
+
+    document.getElementById('tab-set-2').addEventListener('click', function () {
+      tabsManual.setActive(1);
+    });
+
+    document.getElementById('tab-destroy').addEventListener('click', function () {
+      tabsManual.destroy(tabsManual);
+    });
+
+    document.getElementById('tab-reinit').addEventListener('click', initManualTabs);
+  })();
+</script>
+</body>
+</html>

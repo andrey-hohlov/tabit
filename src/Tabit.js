@@ -1,242 +1,353 @@
-'use strict';
+const isDom = require('is-dom');
+const matches = require('dom-matches');
 
-const Tabit = function (elem, options) {
+class Tabit {
+  constructor(elem, options = {}) {
+    if (!isDom(elem)) {
+      throw new TypeError('`new Tabit` requires a DOM element as its first argument.');
+    }
 
-  this.defaults = {
-    tabSelector: 'a',
-    contentSelector: 'div',
-    tabAttr: 'href',
-    contentAttr: 'id',
-    tabActiveClass: 'is-active',
-    contentActiveClass: 'is-active',
-    tabEvent: 'click',
-    active: 1,
-    toggleDisplay: true
-  };
+    // Destroy if already initialized on this element
+    if (elem._tabit) {
+      elem._tabit.destroy();
+    }
 
-  // Merge options with defaults
-  this.options = this._extend({}, this.defaults, options);
 
-  // Main wrapper
-  this.elem = elem;
+    /**
+     * Merge options
+     * https://github.com/getify/You-Dont-Know-JS/blob/master/es6%20&%20beyond/ch2.md#nested-defaults-destructured-and-restructured
+     */
 
-  // Tabs buttons
-  this.tabsArr = this.elem.querySelectorAll(this.options.tabSelector); // TODO: error if empty
-  this.contentArr = this.elem.querySelectorAll(this.options.contentSelector); // TODO: error if empty
+    const {
+      btnSelector = 'a', // Selector for tab button
+      contentSelector = 'div', // Selector for tab content block
+      btnAttr = 'href', // Attribute for refer button to content
+      contentAttr = 'id', // Attribute for refer button to content
+      btnActiveClass = null, // Css class for active button
+      contentActiveClass = null, // Css class for active content
+      event = 'click', // Event for change tab: click, mouseover
+      active = 0, // Active tab on init
+      toggleDisplay = true, // Toggle display property for tabs
+      closable = false, // Allow to close active tab when fire event on it
+      beforeInit = null, // Callback after instance init
+      onInit = null, // Callback after instance init
+      beforeChange = null, // Callback before change active tab
+      onChange = null, // Callback after active tab changed
+      onDestroy = null, // Callback after instance destroyed
+    } = options;
 
-  // Make array from node list
-  this.tabsArr = Array.prototype.slice.call(this.tabsArr, 0);
-  this.contentArr = Array.prototype.slice.call(this.contentArr, 0);
+    this.settings = { btnSelector, contentSelector, btnAttr, contentAttr, btnActiveClass, contentActiveClass, event, active, toggleDisplay, closable, beforeInit, onInit, beforeChange, onChange, onDestroy }; // eslint-disable-line max-len
 
-  // Wrapper for correct bind / unbind event
-  var $tabit = this;
-  this.eventHandlerWrap = function (event) {
-    $tabit.eventHandler(this, event)
-  };
+    this._checkSettings();
 
-  // Fix wrong options
-  this.fixOptions();
+    this.elem = elem;
+    this.tabs = [];
+    this.activeTab = null;
 
-  // Add event to tabs
-  this.bindEvents();
 
-  var activeTabIndex = parseInt(this.options.active) - 1;
+    /**
+     * Create tabs collection
+     */
 
-  // Hide tabs content if needed
-  if (this.options.toggleDisplay) {
-    this.contentArr.forEach(function (item, i) {
-      if (i != activeTabIndex) {
-        item.style.display = 'none';
+    const btns = [...this.elem.querySelectorAll(this.settings.btnSelector)];
+    const contents = [...this.elem.querySelectorAll(this.settings.contentSelector)];
+
+    const findTabContent = (btn) => {
+      let attrValue = btn.getAttribute(btnAttr);
+      let content = false;
+
+      if (!attrValue) return false;
+
+      // Replace first `#` in href attribute
+      if (btnAttr === 'href') {
+        attrValue = attrValue.replace(/^#/g, '');
       }
-    })
-  }
 
-  // Make active first or custom tab
-  this._trigger(this.tabsArr[activeTabIndex], this.options.tabEvent);
+      // Find content for this tab and remove it from list for more fast next search
+      contents.some((item, i, arr) => {
+        if (item.getAttribute(contentAttr) === attrValue) {
+          content = arr[i];
+          arr.splice(i, 1);
+          return content;
+        }
+        return false;
+      });
 
-};
+      return content;
+    };
 
-Tabit.prototype.eventHandler = function (tab, event) {
-  event.preventDefault();
+    btns.forEach((item) => {
+      const btn = item;
+      const content = findTabContent(item);
+      if (!content) return;
+      this.tabs.push({
+        btnNode: btn,
+        contentNode: content,
+      });
+    });
 
-  var attr = this.options.tabAttr;
-  var tabActiveClass = this.options.tabActiveClass;
-  var contentActiveClass = this.options.contentActiveClass;
-  var before = this.options.before;
-  var after = this.options.after;
 
-  if (this._hasClass(tab, tabActiveClass)) return;
+    /**
+     * Init
+     */
 
-  // Find content for tab
-  var attrValue = tab.getAttribute(attr);
-  var content;
+    // Run event handler if fired on button
+    // It store in each new instance and link to prototype function
+    // for correct add/remove event listeners
+    this._eventHandlerShim = (e) => { this._eventHandler(e); };
 
-  if (attr == 'href') {
-    attrValue = attrValue.replace('#', '');
-  }
+    this._bindEvents();
 
-  content = this.findContent(attrValue);
-
-  if (before && typeof before === 'function') {
-    before(tab, content);
-  }
-
-  // Remove classes from all tabs and content
-  this.clearActiveTab();
-  this.clearActiveContent();
-
-  // Add active class for this tab and content
-  this._addClass(tab, tabActiveClass);
-  if (content) {
-    this._addClass(content, contentActiveClass);
-    if (this.options.toggleDisplay) content.style.display = 'block';
-  }
-
-  if (after && typeof after === 'function') {
-    after(tab, content);
-  }
-
-};
-
-Tabit.prototype.bindEvents = function () {
-  var $tabit = this;
-
-  this.tabsArr.forEach(function (item, i, arr) {
-
-    item.addEventListener($tabit.options.tabEvent, $tabit.eventHandlerWrap);
-
-  });
-
-};
-
-Tabit.prototype.unbindEvents = function () {
-  var $tabit = this;
-
-  $tabit.tabsArr.forEach(function (item, i, arr) {
-    item.removeEventListener($tabit.options.tabEvent, $tabit.eventHandlerWrap);
-  });
-
-};
-
-Tabit.prototype.clearActiveTab = function () {
-  var $tabit = this;
-  var className = $tabit.options.tabActiveClass;
-
-  Array.prototype.some.call($tabit.tabsArr, function (item, i, arr) {
-
-    if ($tabit._hasClass(item, className)) {
-      $tabit._removeClass(item, className);
-      return true;
+    if (beforeInit && typeof beforeInit === 'function') {
+      beforeInit(this);
     }
 
-  });
+    this._initState();
 
-};
+    this.elem._tabit = this;
 
-Tabit.prototype.findContent = function (attrValue) {
-  var $tabit = this;
-  var attr = $tabit.options.contentAttr;
-  var content = null;
-
-  Array.prototype.some.call($tabit.contentArr, function (item, i, arr) {
-    if (item.getAttribute(attr) == attrValue) {
-      content = arr[i];
-      return arr[i];
-    }
-  });
-
-  return content;
-
-};
-
-Tabit.prototype.clearActiveContent = function () {
-
-  var $tabit = this;
-  var className = $tabit.options.contentActiveClass;
-
-  Array.prototype.some.call($tabit.contentArr, function (item, i, arr) {
-
-    if ($tabit._hasClass(item, className)) {
-      $tabit._removeClass(item, className);
-      if ($tabit.options.toggleDisplay) item.style.display = 'none';
-      return true;
+    if (onInit && typeof onInit === 'function') {
+      onInit(this);
     }
 
-  });
-
-};
-
-Tabit.prototype.destroy = function () {
-  this.unbindEvents();
-  this.clearActiveTab();
-  this.clearActiveContent();
-};
-
-Tabit.prototype.fixOptions = function () {
-
-  var activeIndex = this.options.active;
-  var tabsLength = this.tabsArr.length;
-
-  if (activeIndex > tabsLength) {
-    this.options.active = 1;
+    return this.elem._tabit;
   }
 
-};
+  setActive(tab) {
+    let newTab;
 
-/**
- * Helpers
- */
+    if (this.tabs.indexOf(tab) !== -1) {
+      newTab = tab;
+    } else if (this.tabs[parseInt(tab, 10)]) {
+      newTab = this.tabs[parseInt(tab, 10)];
+    }
 
-Tabit.prototype._extend = function (out) {
-  out = out || {};
+    if (newTab) {
+      this._runTabEvent(null, newTab);
+    }
+  }
 
-  for (var i = 1; i < arguments.length; i++) {
-    var obj = arguments[i];
+  getActive() {
+    return this.activeTab;
+  }
 
-    if (!obj)
-      continue;
+  destroy() {
+    const onDestroy = this.settings.onDestroy;
+    this._unbindEvents();
 
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        if (typeof obj[key] === 'object')
-          out[key] = this._extend(out[key], obj[key]);
-        else
-          out[key] = obj[key];
+    const btnActiveClass = this.settings.btnActiveClass;
+    const contentActiveClass = this.settings.contentActiveClass;
+    const toggleDisplay = this.settings.toggleDisplay;
+
+    this.tabs.forEach((tab) => {
+      if (btnActiveClass) {
+        // eslint-disable-next-line no-param-reassign
+        tab.btnNode.classList.remove(btnActiveClass);
       }
+      if (contentActiveClass) {
+        // eslint-disable-next-line no-param-reassign
+        tab.contentNode.classList.remove(contentActiveClass);
+      }
+      if (toggleDisplay) {
+        // eslint-disable-next-line no-param-reassign
+        tab.contentNode.style.display = '';
+      }
+    });
+
+    delete this.elem._tabit;
+
+    const props = Object.keys(this);
+    props.forEach((prop) => {
+      delete this[prop];
+    });
+
+    if (onDestroy && typeof onDestroy === 'function') {
+      onDestroy();
     }
   }
 
-  return out;
-};
-
-Tabit.prototype._removeClass = function (el, className) {
-  if (el.classList) {
-    el.classList.remove(className);
-  } else {
-    el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+  next() {
+    this._paginate();
   }
-};
 
-Tabit.prototype._addClass = function (el, className) {
-  if (el.classList) {
-    el.classList.add(className);
-  } else {
-    el.className += ' ' + className;
+  prev() {
+    this._paginate(true);
   }
-};
 
-Tabit.prototype._hasClass = function (el, className) {
-  if (el.classList) {
-    return el.classList.contains(className);
-  } else {
-    return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+  _checkSettings() {
+    // TODO:
+
+    // CSS selectors
+    // this.settings.btnSelector
+    // this.settings.contentSelector
+
+    // Strings without spaces
+    // this.settings.btnActiveClass
+    // this.settings.contentActiveClass
+
+    // String or array
+    // this.settings.event
+
+    // Number, index must be exist
+    // this.settings.active
+
+    // Functions
+    ['beforeInit', 'onInit', 'beforeChange', 'onChange', 'onDestroy'].forEach((func) => {
+      if (this.settings[func] && typeof this.settings[func] !== 'function') {
+        throw new TypeError(`\`${func}\` parameter must be a function.`);
+      }
+    });
   }
-};
 
-Tabit.prototype._trigger = function (el, event) {
-  var eventObj = document.createEvent('HTMLEvents');
-  eventObj.initEvent(event, false, true);
-  el.dispatchEvent(eventObj);
-};
+  _eventHandler(event) {
+    const tabs = this.tabs;
+    let target = event.target;
+    let btn;
+    while (target !== this.elem && !btn) {
+      if (matches(target, this.settings.btnSelector)) {
+        for (let i = 0, c = tabs.length; i < c; i += 1) {
+          if (target === tabs[i].btnNode) {
+            btn = tabs[i];
+            break;
+          }
+        }
+      }
+      target = target.parentNode;
+    }
 
-module.exports = Tabit;
+    if (btn) {
+      return this._runTabEvent(event, btn);
+    }
+
+    return null;
+  }
+
+  _runTabEvent(event, tab) {
+    if (!tab) return;
+    if (event) event.preventDefault();
+
+    const newTab = tab;
+    const activeTab = this.activeTab;
+    const before = this.settings.beforeChange;
+    const after = this.settings.onChange;
+    const closable = this.settings.closable;
+    const secondEvent = newTab === activeTab;
+
+    if (secondEvent && !closable) return; // Ignore event on active tab
+
+    if (before && typeof before === 'function') {
+      before(activeTab, newTab);
+    }
+
+    if (secondEvent && closable) {
+      // Hide active tab when event fired on it if closable set to true
+      this._hideTab(activeTab);
+      this.activeTab = null;
+    } else {
+      this._hideTab(activeTab);
+      this._showTab(newTab);
+    }
+
+    if (after && typeof after === 'function') {
+      after(newTab);
+    }
+  }
+
+  _bindEvents() {
+    this._setEvents();
+  }
+
+  _unbindEvents() {
+    this._setEvents(true);
+  }
+
+  _setEvents(remove) {
+    const event = this.settings.event;
+    const action = remove ? 'removeEventListener' : 'addEventListener';
+
+    if (typeof event === 'string') {
+      this.elem[action](event, this._eventHandlerShim);
+    } else if (Array.isArray(event)) {
+      event.forEach((item) => {
+        this.elem[action](item, this._eventHandlerShim);
+      });
+    }
+  }
+
+  _initState() {
+    const active = this.settings.active;
+
+    // Hide all tabs exclude active if set toggle display
+    if (this.settings.toggleDisplay) {
+      this.tabs.forEach((tab, i) => {
+        if (i !== active) {
+          // eslint-disable-next-line no-param-reassign
+          tab.contentNode.style.display = 'none';
+        }
+      });
+    }
+
+    if (active >= 0) this._runTabEvent(null, this.tabs[active]);
+  }
+
+  _hideTab(tab) {
+    this._toggleTab(tab, true);
+  }
+
+  _showTab(tab) {
+    this._toggleTab(tab);
+  }
+
+  _toggleTab(tab, hide) {
+    if (!tab) return;
+    const classAction = hide ? 'remove' : 'add';
+    const btnActiveClass = this.settings.btnActiveClass;
+    const contentActiveClass = this.settings.contentActiveClass;
+
+    if (this.settings.toggleDisplay) {
+      // eslint-disable-next-line no-param-reassign
+      tab.contentNode.style.display = hide ? 'none' : '';
+    }
+    if (btnActiveClass) {
+      // eslint-disable-next-line no-param-reassign
+      tab.btnNode.classList[classAction](btnActiveClass);
+    }
+    if (contentActiveClass) {
+      // eslint-disable-next-line no-param-reassign
+      tab.contentNode.classList[classAction](contentActiveClass);
+    }
+    if (!hide) {
+      this.activeTab = tab;
+    }
+  }
+
+  _paginate(prev) {
+    if (!this.activeTab) return;
+
+    const activeIndex = this.tabs.indexOf(this.activeTab);
+    const maxIndex = this.tabs.length - 1;
+    let target;
+    let reverse;
+    let step;
+
+    if (prev) {
+      step = -1;
+      reverse = activeIndex === 0;
+    } else {
+      step = 1;
+      reverse = activeIndex === maxIndex;
+    }
+
+    if (reverse) {
+      target = prev ? maxIndex : 0;
+    } else {
+      target = activeIndex + step;
+    }
+
+    this.setActive(target);
+  }
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = Tabit;
+}
