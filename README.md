@@ -157,7 +157,7 @@ div:not(.is-active) {
 new Tabit(
   document.getElementById('tabs'),
   {
-    event: ['click', 'mouseover']
+    event: 'mouseover'
   }
 );
 ```
@@ -181,10 +181,10 @@ new Tabit(
       if (!activeTab) return; // no animate on init
       $(activeTab.contentNode).animate({
         opacity: 'hide'
-          }, 300, function () {
-            $(newTab.contentNode).animate({
-              opacity: 'show'
-            }, 400)
+      }, 300, function () {
+        $(newTab.contentNode).animate({
+          opacity: 'show'
+        }, 400)
       })
     }
   }
