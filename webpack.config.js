@@ -43,7 +43,7 @@ module.exports = {
   module:  {
     loaders: [{
       test: /\.js$/,
-      include: path.join(__dirname, 'src'),
+      include: path.resolve(__dirname, 'src'),
       loader: 'babel?presets[]=es2015'
     }]
   },

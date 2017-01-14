@@ -17,7 +17,7 @@
     <h1 class="jumbotron-heading">Tabit!</h1>
     <p class="lead text-muted">Just javascript tabs. Make it where you want.<br>No dependencies. Lightweight. Customizable.</p>
     <p>
-      <a href="#" class="btn btn-primary">Documentation and download</a>
+      <a href="https://github.com/andrey-hohlov/tabit" target="_blank" class="btn btn-primary">Documentation and download</a>
     </p>
   </div>
 </section>
@@ -66,7 +66,7 @@
 </div>
 <!-- Set event-->
 <div class="container mb-5">
-  <h3 class="mb-3">Change on click or hover</h3>
+  <h3 class="mb-3">Change on hover</h3>
   <div id="tabs-set-event" class="mb-2">
     <nav class="btn-group mb-2">
       <a href="#tabs-set-event-1" class="btn btn-primary">Tab 1</a>
@@ -187,7 +187,7 @@
      * Set event to tab
      */
 
-    var tabsSetEvent = new Tabit(document.getElementById('tabs-set-event'), {btnActiveClass: 'active', event: ['click', 'mouseover']});
+    var tabsSetEvent = new Tabit(document.getElementById('tabs-set-event'), {btnActiveClass: 'active', event: ['mouseover']});
 
 
     /**
@@ -205,31 +205,23 @@
       document.getElementById('tabs-animations'),
       {
         btnActiveClass: 'active',
-        contentActiveClass: false,
         active: 0,
         toggleDisplay: false,
-        beforeInit: function (instance) {
-          // Hide all tabs content
-          Array.prototype.forEach.call(instance.tabs, function (item, i) {
-            if (i !== 0) {
-              $(item.contentNode).hide();
-            }
+        onInit: function (instance) {
+          instance.tabs.forEach(function (item, i) {
+            if (i !== 0) $(item.contentNode).hide();
           });
         },
-        beforeChange: function (activeTab, newTab, doubleEvent, instance) {
-          var showNew = function () {
-            $(newTab.contentNode).animate({
-              opacity: 'show'
-            }, 400)
-          };
-          if (activeTab) {
-            $(activeTab.contentNode).animate({
+        beforeChange: function (activeTab, newTab, instance) {
+          if (!activeTab) return; // no animate on init
+          $(activeTab.contentNode).animate({
               opacity: 'hide'
-            }, 300, showNew)
-          } else {
-            showNew();
-          }
-        },
+            }, 300, function () {
+              $(newTab.contentNode).animate({
+                opacity: 'show'
+              }, 400)
+          })
+        }
       }
     );
 

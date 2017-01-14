@@ -14,11 +14,13 @@ class Tabit {
 
 
     /**
-     * Merge options
-     * https://github.com/getify/You-Dont-Know-JS/blob/master/es6%20&%20beyond/ch2.md#nested-defaults-destructured-and-restructured
+     * Prepare config
      */
 
-    const {
+    // Tricky merge
+    // https://github.com/getify/You-Dont-Know-JS/blob/master/es6%20&%20beyond/ch2.md#nested-defaults-destructured-and-restructured
+    /* eslint-disable prefer-const */
+    let {
       btnSelector = 'a', // Selector for tab button
       contentSelector = 'div', // Selector for tab content block
       btnAttr = 'href', // Attribute for refer button to content
@@ -35,22 +37,25 @@ class Tabit {
       onChange = null, // Callback after active tab changed
       onDestroy = null, // Callback after instance destroyed
     } = options;
+    /* eslint-enable prefer-const */
 
     this.settings = { btnSelector, contentSelector, btnAttr, contentAttr, btnActiveClass, contentActiveClass, event, active, toggleDisplay, closable, beforeInit, onInit, beforeChange, onChange, onDestroy }; // eslint-disable-line max-len
 
     this._checkSettings();
-
-    this.elem = elem;
-    this.tabs = [];
-    this.activeTab = null;
 
 
     /**
      * Create tabs collection
      */
 
-    const btns = [...this.elem.querySelectorAll(this.settings.btnSelector)];
-    const contents = [...this.elem.querySelectorAll(this.settings.contentSelector)];
+    this.elem = elem;
+    this.tabs = [];
+    this.activeTab = null;
+
+    let btns = this.elem.querySelectorAll(this.settings.btnSelector);
+    btns = Array.prototype.slice.call(btns);
+    let contents = this.elem.querySelectorAll(this.settings.contentSelector);
+    contents = Array.prototype.slice.call(contents);
 
     const findTabContent = (btn) => {
       let attrValue = btn.getAttribute(btnAttr);
@@ -115,11 +120,10 @@ class Tabit {
 
   setActive(tab) {
     let newTab;
-
-    if (this.tabs.indexOf(tab) !== -1) {
+    if (typeof tab === 'number') {
+      newTab = this.tabs[tab];
+    } else if (this.tabs.indexOf(tab) !== -1) {
       newTab = tab;
-    } else if (this.tabs[parseInt(tab, 10)]) {
-      newTab = this.tabs[parseInt(tab, 10)];
     }
 
     if (newTab) {
@@ -236,7 +240,7 @@ class Tabit {
     if (secondEvent && !closable) return; // Ignore event on active tab
 
     if (before && typeof before === 'function') {
-      before(activeTab, newTab);
+      before(activeTab, newTab, this);
     }
 
     if (secondEvent && closable) {
@@ -249,7 +253,7 @@ class Tabit {
     }
 
     if (after && typeof after === 'function') {
-      after(newTab);
+      after(newTab, this);
     }
   }
 
