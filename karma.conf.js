@@ -33,17 +33,9 @@ module.exports = function(config) {
     browsers: ['Chrome'],
     singleRun: true,
     concurrency: Infinity,
-
-    //  Custom launcher for Travis-CI
-    customLaunchers: {
-      chromeTravisCI: {
-        base: 'Chrome',
-        flags: ['--no-sandbox']
-      }
-    }
   });
 
   if (process.env.TRAVIS) {
-    config.browsers = ['chromeTravisCI'];
+    config.browsers = ['PhantomJS'];
   }
 };
