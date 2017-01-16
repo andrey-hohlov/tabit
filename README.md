@@ -1,4 +1,5 @@
-# Tabit!
+# Tabit! [![Build Status](https://travis-ci.org/andrey-hohlov/tabit.svg?branch=master)](https://travis-ci.org/andrey-hohlov/tabit)
+
 Just javascript tabs. Make it where you want. No dependencies. Lightweight. Customizable. 
 
 Examples: [http://andrey-hohlov.github.io/tabit/](https://andrey-hohlov.github.io/tabit/)
