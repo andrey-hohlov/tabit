@@ -25,7 +25,7 @@
     "build": "NODE_ENV=production webpack",
     "eslint": "eslint src/Tabit.js",
     "test": "npm run eslint && karma start karma.conf.js",
-    "prepublish": "npm run test && npm run build"
+    "prepublish": "npm run test"
   },
   "devDependencies": {
     "babel-core": "^6.21.0",
