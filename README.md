@@ -87,13 +87,17 @@ new Tabit(element, options);
 - `destroy()` - destroy Tabit instance
 
 ## Browser support
-- IE10
-- Chrome 12
-- Firefox 16
-- Opera 15
-- Safari 4
-- Android Browser 4.0
-- iOS Safari 6.0
+- IE 10+
+- Chrome 24+
+- Firefox 23+
+- Opera 15+
+- Safari 7+
+- Android Browser 4.4+
+- iOS Safari 7.1+
+
+Works in IE 9 with [Element.prototype.classList](https://developer.mozilla.org/ru/docs/Web/API/Element/classList) polyfill;
+
+Find polyfills on [polyfill.io](https://polyfill.io)
 
 ## Recipes
 
