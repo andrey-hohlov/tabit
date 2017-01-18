@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tabit</title>
   <script
-    src="//code.jquery.com/jquery-3.1.1.js"
+    src="https://code.jquery.com/jquery-3.1.1.js"
     integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
     crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
@@ -83,7 +83,6 @@
       <span class="card-block">Content of third tab</span>
     </div>
   </div>
-  <i class="small">You can set multiple events. Supports: click, mouseover.</i>
 </div>
 <!-- Closable-->
 <div class="container mb-5">
@@ -105,6 +104,47 @@
     </div>
   </div>
   <i class="small">Click on active tab for close it.</i>
+</div>
+<!-- Animation-->
+<div class="container mb-5">
+  <h3 class="mb-3">Custom animations</h3>
+  <div id="tabs-animations" class="mb-2">
+    <nav class="btn-group mb-2">
+      <a href="#tabs-animations-1" class="btn btn-primary">Tab 1</a>
+      <a href="#tabs-animations-2" class="btn btn-primary">Tab 2</a>
+      <a href="#tabs-animations-3" class="btn btn-primary">Tab 3</a>
+    </nav>
+    <div id="tabs-animations-1" class="card">
+      <span class="card-block">Content of first tab</span>
+    </div>
+    <div id="tabs-animations-2" class="card">
+      <span class="card-block">Content of second tab</span>
+    </div>
+    <div id="tabs-animations-3" class="card">
+      <span class="card-block">Content of third tab</span>
+    </div>
+  </div>
+  <i class="small">In example used jQuery for animations.</i>
+</div>
+<!-- Rotate -->
+<div class="container mb-5">
+  <h3 class="mb-3">Autorotate</h3>
+  <div id="tabs-rotate" class="mb-2">
+    <nav class="btn-group mb-2">
+      <a href="#tabs-rotate-1" class="btn btn-primary">Tab 1</a>
+      <a href="#tabs-rotate-2" class="btn btn-primary">Tab 2</a>
+      <a href="#tabs-rotate-3" class="btn btn-primary">Tab 3</a>
+    </nav>
+    <div id="tabs-rotate-1" class="card">
+      <span class="card-block">Content of first tab</span>
+    </div>
+    <div id="tabs-rotate-2" class="card">
+      <span class="card-block">Content of second tab</span>
+    </div>
+    <div id="tabs-rotate-3" class="card">
+      <span class="card-block">Content of third tab</span>
+    </div>
+  </div>
 </div>
 <!-- Manual control -->
 <div class="container mb-5">
@@ -132,27 +172,6 @@
     <button type="button" id="tab-destroy" class="btn btn-secondary">Destroy</button>
     <button type="button" id="tab-reinit" class="btn btn-secondary">Reinit</button>
   </nav>
-</div>
-<!-- Animation-->
-<div class="container mb-5">
-  <h3 class="mb-3">Custom hide/show</h3>
-  <div id="tabs-animations" class="mb-2">
-    <nav class="btn-group mb-2">
-      <a href="#tabs-animations-1" class="btn btn-primary">Tab 1</a>
-      <a href="#tabs-animations-2" class="btn btn-primary">Tab 2</a>
-      <a href="#tabs-animations-3" class="btn btn-primary">Tab 3</a>
-    </nav>
-    <div id="tabs-animations-1" class="card">
-      <span class="card-block">Content of first tab</span>
-    </div>
-    <div id="tabs-animations-2" class="card">
-      <span class="card-block">Content of second tab</span>
-    </div>
-    <div id="tabs-animations-3" class="card">
-      <span class="card-block">Content of third tab</span>
-    </div>
-  </div>
-  <i class="small">In example used jQuery for animations.</i>
 </div>
 <!-- Footer -->
 <footer class="pb-5">
@@ -224,6 +243,16 @@
         }
       }
     );
+
+    /**
+     * Rotate
+     */
+
+    var tabsRotate = new Tabit(document.getElementById('tabs-rotate'), {btnActiveClass: 'active'});
+    var rotate = setInterval(function() {
+      tabsRotate.next();
+    }, 2000)
+
 
     /**
      * Manual control

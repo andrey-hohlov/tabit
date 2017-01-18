@@ -201,6 +201,7 @@ var rotate = setInterval(function() {
 }, 2000)
 ```
 
+[Live examples](https://andrey-hohlov.github.io/tabit/)
 
 ## License
 
