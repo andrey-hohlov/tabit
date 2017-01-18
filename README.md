@@ -95,9 +95,9 @@ new Tabit(element, options);
 - Android Browser 4.4+
 - iOS Safari 7.1+
 
-Works in IE 9 with [Element.prototype.classList](https://developer.mozilla.org/ru/docs/Web/API/Element/classList) polyfill;
+Works in IE 9 with [Element.prototype.classList](https://developer.mozilla.org/ru/docs/Web/API/Element/classList) polyfill.
 
-Find polyfills on [polyfill.io](https://polyfill.io)
+Find polyfills on [polyfill.io](https://polyfill.io).
 
 ## Recipes
 
