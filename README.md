@@ -48,10 +48,10 @@ const tabit = new Tabit(element, options);
   contentSelector = 'div',
   buttonAttribute = 'href',
   contentAttribute = 'id', 
-  btnActiveClass = null,
+  buttonActiveClass = null,
   contentActiveClass = null,
   event = 'click',
-  active = 0,
+  activeIndex = 0,
   toggleDisplay = true, 
   closable = false,
   beforeInit = null,
@@ -66,10 +66,10 @@ const tabit = new Tabit(element, options);
 - `contentSelector` - *(string)* CSS selector for tab content block
 - `buttonAttribute` - *(string)* attribute that contains a reference to the value of the `contentAttribute`, for `href` attribute will be removed first `#`
 - `contentAttribute` - *(string)* attribute contains the value that is referred to by `buttonAttribute`
-- `btnActiveClass` - *(string)* class for active tab button
+- `buttonActiveClass` - *(string)* class for active tab button
 - `contentActiveClass` - *(string)* class for active tab content block
 - `event` - *(string | array)* event or events fired on tab button, support: `click`, `mouseover`, `touchstart`
-- `activeIndex` - *(number or boolean)* index of active tab on init, set `false` for no active tab 
+- `activeIndex` - *(number)* index of active tab on init, set `-1` for no active tab 
 - `toggleDisplay` - *(boolean)* toggle css display property for tabs content blocks (display: none for inactive)
 - `closable` - *(boolean)* close active tab after click
 - `beforeInit` - *(function)* callback when instance created but not set active tab yet, arguments: `Tabit instance`
@@ -82,8 +82,8 @@ const tabit = new Tabit(element, options);
 
 - `next()` - go to next tab, turn to first from last
 - `prev()` - go to previous tab, turn to last from first
-- `getActiveTab()` - return current active tab
-- `getActiveTabIndex()` - return current active tab index
+- `getActiveTab()` - return active tab
+- `getActiveTabIndex()` - return active tab index
 - `getTab(index)` - get tab by index
 - `setActiveTab(index)` - set active tab by index
 - `destroy()` - destroy Tabit instance
@@ -177,7 +177,7 @@ new Tabit(
   {
     toggleDisplay: false,
     onInit: function (instance) {
-      instance.tabs.forEach(function (item, i) {
+      this.tabs.forEach(function (item, i) {
         if (i !== 0) $(item.content).hide();
       });
     },
@@ -196,9 +196,9 @@ new Tabit(
 ### Auto rotation
 
 ```javascript
-var instance = new Tabit(document.getElementById('tabs'));
+var tabit = new Tabit(document.getElementById('tabs'));
 var rotate = setInterval(function() {
-  instance.next();      
+  tabit.next();      
 }, 2000)
 ```
 
