@@ -165,13 +165,18 @@
       <span class="card-block">Content of third tab</span>
     </div>
   </div>
-  <nav class="btn-group">
-    <button type="button" id="tab-prev" class="btn btn-secondary">Prev</button>
-    <button type="button" id="tab-next" class="btn btn-secondary">Next</button>
-    <button type="button" id="tab-set-2" class="btn btn-secondary">Set 2</button>
-    <button type="button" id="tab-destroy" class="btn btn-secondary">Destroy</button>
-    <button type="button" id="tab-reinit" class="btn btn-secondary">Reinit</button>
-  </nav>
+  <div class="mb-2">
+    <nav class="btn-group">
+      <button type="button" id="tab-prev" class="btn btn-secondary">Prev</button>
+      <button type="button" id="tab-next" class="btn btn-secondary">Next</button>
+      <button type="button" id="tab-set-2" class="btn btn-secondary">Set 2</button>
+      <button type="button" id="tab-get-active" class="btn btn-secondary">Get active</button>
+      <button type="button" id="tab-get-active-index" class="btn btn-secondary">Get active index</button>
+      <button type="button" id="tab-destroy" class="btn btn-secondary">Destroy</button>
+      <button type="button" id="tab-reinit" class="btn btn-secondary">Reinit</button>
+    </nav>
+  </div>
+  <i class="small">Look in console for result of `get active`.</i>
 </div>
 <!-- Footer -->
 <footer class="pb-5">
@@ -192,28 +197,28 @@
      * Default init
      */
 
-    var tabsDefault = new Tabit(document.getElementById('tabs-default'), {btnActiveClass: 'active'});
+    var tabsDefault = new Tabit(document.getElementById('tabs-default'), {buttonActiveClass: 'active'});
 
 
     /**
      * Set active tab
      */
 
-    var tabsSetActive = new Tabit(document.getElementById('tabs-set-active'), {btnActiveClass: 'active', active: 1});
+    var tabsSetActive = new Tabit(document.getElementById('tabs-set-active'), {buttonActiveClass: 'active', active: 1});
 
 
     /**
      * Set event to tab
      */
 
-    var tabsSetEvent = new Tabit(document.getElementById('tabs-set-event'), {btnActiveClass: 'active', event: ['mouseover']});
+    var tabsSetEvent = new Tabit(document.getElementById('tabs-set-event'), {buttonActiveClass: 'active', event: ['mouseover', 'click']});
 
 
     /**
      * Closable
      */
 
-    var tabsClosable = new Tabit(document.getElementById('tabs-closable'), {btnActiveClass: 'active', active: false, closable: true});
+    var tabsClosable = new Tabit(document.getElementById('tabs-closable'), {buttonActiveClass: 'active', activeIndex: -1, closable: true});
 
 
     /**
@@ -223,23 +228,20 @@
     var tabsAnimation = new Tabit(
       document.getElementById('tabs-animations'),
       {
-        btnActiveClass: 'active',
-        active: 0,
+        buttonActiveClass: 'active',
         toggleDisplay: false,
-        onInit: function (instance) {
-          instance.tabs.forEach(function (item, i) {
-            if (i !== 0) $(item.contentNode).hide();
+        onInit: function () {
+          this.tabs.forEach(function (item, i) {
+            if (i !== 0) $(item.content).hide();
           });
         },
         beforeChange: function (activeTab, newTab, instance) {
           if (!activeTab) return; // no animate on init
-          $(activeTab.contentNode).animate({
-              opacity: 'hide'
-            }, 300, function () {
-              $(newTab.contentNode).animate({
-                opacity: 'show'
-              }, 400)
-          })
+          $(activeTab.content)
+            .stop()
+            .fadeOut(function () {
+              $(newTab.content).stop().fadeIn()
+            });
         }
       }
     );
@@ -248,7 +250,7 @@
      * Rotate
      */
 
-    var tabsRotate = new Tabit(document.getElementById('tabs-rotate'), {btnActiveClass: 'active'});
+    var tabsRotate = new Tabit(document.getElementById('tabs-rotate'), {buttonActiveClass: 'active'});
     var rotate = setInterval(function() {
       tabsRotate.next();
     }, 2000)
@@ -265,7 +267,7 @@
       tabsManual = new Tabit(
         document.getElementById('tabs-manual'),
         {
-          btnActiveClass: 'active',
+          buttonActiveClass: 'active',
           onDestroy: function () {
             tabsManual = undefined; // don't forget to delete instance (and remove event handlers)
           }
@@ -284,7 +286,15 @@
     });
 
     document.getElementById('tab-set-2').addEventListener('click', function () {
-      tabsManual.setActive(1);
+      tabsManual.setActiveTab(1);
+    });
+
+    document.getElementById('tab-get-active').addEventListener('click', function () {
+      console.log(tabsManual.getActiveTab());
+    });
+
+    document.getElementById('tab-get-active-index').addEventListener('click', function () {
+      console.log(tabsManual.getActiveTabIndex());
     });
 
     document.getElementById('tab-destroy').addEventListener('click', function () {

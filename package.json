@@ -1,7 +1,7 @@
 {
   "name": "tabit",
   "version": "2.0.1",
-  "description": "Just tabs. Make it where you want.",
+  "description": "Just javascript tabs. Use it anywhere. No dependencies. Lightweight. Customizable.",
   "homepage": "https://github.com/andrey-hohlov/tabit",
   "author": {
     "name": "Andrey Hohlov",
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "dev": "webpack",
-    "build": "NODE_ENV=production webpack",
+    "build": "npm run test && NODE_ENV=production webpack && npm run compile",
     "eslint": "eslint src/Tabit.js",
     "test": "npm run eslint && karma start karma.conf.js",
     "compile": "rimraf lib/* && babel src/Tabit.js -o lib/Tabit.js",
@@ -50,8 +50,5 @@
     "rimraf": "^2.5.4",
     "webpack": "^1.14.0"
   },
-  "dependencies": {
-    "dom-matches": "^2.0.0",
-    "is-dom": "^1.0.7"
-  }
+  "dependencies": {}
 }

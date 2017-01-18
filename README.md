@@ -1,6 +1,6 @@
 # Tabit! [![Build Status](https://travis-ci.org/andrey-hohlov/tabit.svg?branch=master)](https://travis-ci.org/andrey-hohlov/tabit)
 
-Just javascript tabs. Make it where you want. No dependencies. Lightweight. Customizable. 
+Just javascript tabs. Use it anywhere. No dependencies. Lightweight. Customizable. 
 
 Examples: [http://andrey-hohlov.github.io/tabit/](https://andrey-hohlov.github.io/tabit/)
 
@@ -35,7 +35,7 @@ import Tabit from 'Tabit'
 
 const element = document.getElementById('tabs');
 const options = {};
-new Tabit(element, options);
+const tabit = new Tabit(element, options); 
 ```
 
 ...or manually [download](https://github.com/andrey-hohlov/tabit/releases) and inject the minified script into your website.
@@ -44,10 +44,10 @@ new Tabit(element, options);
 
 ```javascript
 {
-  btnSelector = 'a',
+  buttonSelector = 'a',
   contentSelector = 'div',
-  btnAttr = 'href',
-  contentAttr = 'id', 
+  buttonAttribute = 'href',
+  contentAttribute = 'id', 
   btnActiveClass = null,
   contentActiveClass = null,
   event = 'click',
@@ -62,14 +62,14 @@ new Tabit(element, options);
 }
 ```
 
-- `btnSelector` - *(string)* CSS selector for tab button - trigger for change tab
+- `buttonSelector` - *(string)* CSS selector for tab button - trigger for change tab
 - `contentSelector` - *(string)* CSS selector for tab content block
-- `btnAttr` - *(string)* attribute that contains a reference to the value of the `contentAttr`, for `href` attribute will be removed first `#`
-- `contentAttr` - *(string)* attribute contains the value that is referred to by `btnAttr`
+- `buttonAttribute` - *(string)* attribute that contains a reference to the value of the `contentAttribute`, for `href` attribute will be removed first `#`
+- `contentAttribute` - *(string)* attribute contains the value that is referred to by `buttonAttribute`
 - `btnActiveClass` - *(string)* class for active tab button
 - `contentActiveClass` - *(string)* class for active tab content block
 - `event` - *(string | array)* event or events fired on tab button, support: `click`, `mouseover`, `touchstart`
-- `active` - *(number or boolean)* index of active tab on init, set `false` for no active tab 
+- `activeIndex` - *(number or boolean)* index of active tab on init, set `false` for no active tab 
 - `toggleDisplay` - *(boolean)* toggle css display property for tabs content blocks (display: none for inactive)
 - `closable` - *(boolean)* close active tab after click
 - `beforeInit` - *(function)* callback when instance created but not set active tab yet, arguments: `Tabit instance`
@@ -82,8 +82,10 @@ new Tabit(element, options);
 
 - `next()` - go to next tab, turn to first from last
 - `prev()` - go to previous tab, turn to last from first
-- `getActive()` - return current active tab
-- `setActive(index)` - set active tab by index
+- `getActiveTab()` - return current active tab
+- `getActiveTabIndex()` - return current active tab index
+- `getTab(index)` - get tab by index
+- `setActiveTab(index)` - set active tab by index
 - `destroy()` - destroy Tabit instance
 
 ## Browser support
@@ -122,10 +124,10 @@ Find polyfills on [polyfill.io](https://polyfill.io).
 new Tabit(
   document.getElementById('tabs'),
   {
-    btnSelector: '[data-target]',
+    buttonSelector: '[data-target]',
     contentSelector: 'data-target',
-    btnAttr: '[data-content]',
-    contentAttr: 'data-content',  
+    buttonAttribute: '[data-content]',
+    contentAttribute: 'data-content',  
   }
 );
 ```
@@ -162,35 +164,30 @@ div:not(.is-active) {
 new Tabit(
   document.getElementById('tabs'),
   {
-    event: 'mouseover'
+    event: ['mouseover', 'click']
   }
 );
 ```
 
 ### Use custom animations
 
-[Example](http://andrey-hohlov.github.io/tabit/#tabs-animations)
-
 ```javascript
 new Tabit(
   document.getElementById('tabs'),
   {
-    active: 0,
     toggleDisplay: false,
     onInit: function (instance) {
       instance.tabs.forEach(function (item, i) {
-        if (i !== 0) $(item.contentNode).hide();
+        if (i !== 0) $(item.content).hide();
       });
     },
     beforeChange: function (activeTab, newTab, instance) {
       if (!activeTab) return; // no animate on init
-      $(activeTab.contentNode).animate({
-        opacity: 'hide'
-      }, 300, function () {
-        $(newTab.contentNode).animate({
-          opacity: 'show'
-        }, 400)
-      })
+      $(activeTab.content)
+        .stop()
+        .fadeOut(function () {
+          $(newTab.content).stop().fadeIn()
+        });
     }
   }
 );
