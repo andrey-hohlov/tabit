@@ -260,7 +260,7 @@ class Tabit {
     }
 
     if (after && typeof after === 'function') {
-      before.call(this, newTab, this);
+      after.call(this, newTab, this);
     }
   }
 
