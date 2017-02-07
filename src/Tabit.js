@@ -11,9 +11,10 @@ class Tabit {
       throw new TypeError('`new Tabit` requires a DOM element as its first argument.');
     }
 
-    // Destroy if already initialized on this element
-    if (element._tabit) {
-      element._tabit.destroy();
+    // Already initialized
+    const cachedInstance = Tabit._cacheGet(element);
+    if (cachedInstance) {
+      return cachedInstance;
     }
 
     // Tricky merge
@@ -108,13 +109,13 @@ class Tabit {
 
     this._initState();
 
-    this.element._tabit = this;
+    Tabit._cacheSet(element, this);
 
     if (onInit && typeof onInit === 'function') {
       onInit.call(this, this);
     }
 
-    return this.element._tabit;
+    return this;
   }
 
   /**
@@ -170,11 +171,11 @@ class Tabit {
 
   destroy() {
     const onDestroy = this.settings.onDestroy;
-    this._unbindEvents();
-
     const buttonActiveClass = this.settings.buttonActiveClass;
     const contentActiveClass = this.settings.contentActiveClass;
     const toggleDisplay = this.settings.toggleDisplay;
+
+    this._unbindEvents();
 
     this.tabs.forEach((tab) => {
       if (buttonActiveClass) {
@@ -191,7 +192,7 @@ class Tabit {
       }
     });
 
-    delete this.element._tabit;
+    Tabit._cacheRemove(this.element);
 
     const props = Object.keys(this);
     props.forEach((prop) => {
@@ -418,7 +419,47 @@ class Tabit {
     (typeof val.nodeName === 'string')
     /* eslint-enable */
   }
+
+  /**
+   * Instances collection
+   * @type {Array}
+   * @private
+   */
+
+  static _cacheSet(key, value) {
+    this._cacheRemove(key);
+    this._cache.push({
+      key,
+      value,
+    });
+  }
+
+  static _cacheGet(key) {
+    for (let i = 0, l = this._cache.length; i < l; i += 1) {
+      const cached = this._cache[i];
+      if (cached.key === key) {
+        return cached.value;
+      }
+    }
+    return null;
+  }
+
+  static _cacheRemove(key) {
+    for (let i = 0, l = this._cache.length; i < l; i += 1) {
+      const cached = this._cache[i];
+      if (cached.key === key) {
+        this._cache.splice(i, 1);
+        return;
+      }
+    }
+  }
+
+  static getInstance(element) {
+    return this._cacheGet(element);
+  }
 }
+
+Tabit._cache = [];
 
 if (typeof module !== 'undefined') {
   module.exports = Tabit;

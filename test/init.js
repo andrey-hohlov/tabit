@@ -15,4 +15,16 @@ describe('Init', function() {
     const instance = new Tabit(document.getElementById('tabs'), {});
     assert.equal(3, instance.tabs.length);
   });
+
+  it('cached', function() {
+    const instance1 = new Tabit(document.getElementById('tabs'), {});
+    const instance2 = new Tabit(document.getElementById('tabs'), {});
+    assert(instance1 === instance2, 'Instance not cached!');
+  });
+
+  it('returns instance from element', function() {
+    const element = document.getElementById('tabs');
+    const instance = new Tabit(element, {});
+    assert(Tabit.getInstance(element) === instance, 'Instance for element not cached!');
+  });
 });
