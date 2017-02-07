@@ -87,7 +87,7 @@ const tabit = new Tabit(element, options);
 - `getTab(index)` - get tab by index
 - `setActiveTab(index)` - set active tab by index
 - `destroy()` - destroy Tabit instance
-- `getInstance(element)` - get Tabit instance from element
+- `Tabit.getInstance(element)` - get Tabit instance from element
 
 ## Browser support
 - IE 10+
