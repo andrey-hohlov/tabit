@@ -87,6 +87,7 @@ const tabit = new Tabit(element, options);
 - `getTab(index)` - get tab by index
 - `setActiveTab(index)` - set active tab by index
 - `destroy()` - destroy Tabit instance
+- `getInstance(element)` - get Tabit instance from element
 
 ## Browser support
 - IE 10+
@@ -203,6 +204,23 @@ var rotate = setInterval(function() {
 ```
 
 [Live examples](https://andrey-hohlov.github.io/tabit/)
+
+
+## Changelog
+
+#### 2.2
+- Add instance cache
+- Add `getInstance` method
+
+#### 2.1
+- Refactoring after code review
+- [Change options names](https://github.com/andrey-hohlov/tabit/commit/71736aba1df63953525fbbe65b628c8f1647a6c0)
+
+
+#### 2.0
+- Full rewrite on ES6.
+
+
 
 ## License
 
