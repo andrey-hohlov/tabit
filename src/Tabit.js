@@ -1,5 +1,4 @@
 class Tabit {
-
   /**
    * Instance constructor
    * @param element - dom element
@@ -123,6 +122,7 @@ class Tabit {
    * @param index {number}
    */
   setActiveTab(index) {
+    this._checkDestroyed();
     const newTab = this.tabs[index];
     if (newTab) {
       this._runTabEvent(null, newTab);
@@ -136,6 +136,7 @@ class Tabit {
    * @returns {null|object}
    */
   getActiveTab() {
+    this._checkDestroyed();
     return this._activeTab;
   }
 
@@ -144,6 +145,7 @@ class Tabit {
    * @returns {number}
    */
   getActiveTabIndex() {
+    this._checkDestroyed();
     return this.tabs.indexOf(this._activeTab);
   }
 
@@ -152,6 +154,7 @@ class Tabit {
    * @param index {number}
    */
   getTab(index) {
+    this._checkDestroyed();
     return this.tabs[index];
   }
 
@@ -159,6 +162,7 @@ class Tabit {
    * Go to next tab or return to first
    */
   next() {
+    this._checkDestroyed();
     this._paginate();
   }
 
@@ -166,10 +170,15 @@ class Tabit {
    * Go to previous tab or return to last
    */
   prev() {
+    this._checkDestroyed();
     this._paginate(true);
   }
 
+  /**
+   * Remove tab instance - properties, event listeners, cache
+   */
   destroy() {
+    this._checkDestroyed();
     const onDestroy = this.settings.onDestroy;
     const buttonActiveClass = this.settings.buttonActiveClass;
     const contentActiveClass = this.settings.contentActiveClass;
@@ -202,6 +211,8 @@ class Tabit {
     if (onDestroy && typeof onDestroy === 'function') {
       onDestroy();
     }
+
+    this._destroyed = true;
   }
 
   _checkSettings() {
@@ -359,6 +370,10 @@ class Tabit {
     this.setActiveTab(target);
   }
 
+  _checkDestroyed() {
+    if (this._destroyed) throw new Error('Tabit instance destroyed');
+  }
+
   /**
    * Check if a DOM element matches a given selector
    * https://github.com/necolas/dom-matches
@@ -421,22 +436,20 @@ class Tabit {
   }
 
   /**
-   * Instances collection
-   * @type {Array}
-   * @private
+   * Instances cache methods
    */
 
   static _cacheSet(key, value) {
-    this._cacheRemove(key);
-    this._cache.push({
+    Tabit._cacheRemove(key);
+    Tabit._cache.push({
       key,
       value,
     });
   }
 
   static _cacheGet(key) {
-    for (let i = 0, l = this._cache.length; i < l; i += 1) {
-      const cached = this._cache[i];
+    for (let i = 0, l = Tabit._cache.length; i < l; i += 1) {
+      const cached = Tabit._cache[i];
       if (cached.key === key) {
         return cached.value;
       }
@@ -445,10 +458,10 @@ class Tabit {
   }
 
   static _cacheRemove(key) {
-    for (let i = 0, l = this._cache.length; i < l; i += 1) {
-      const cached = this._cache[i];
+    for (let i = 0, l = Tabit._cache.length; i < l; i += 1) {
+      const cached = Tabit._cache[i];
       if (cached.key === key) {
-        this._cache.splice(i, 1);
+        Tabit._cache.splice(i, 1);
         return;
       }
     }

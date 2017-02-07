@@ -5,7 +5,7 @@
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tabit - JavaScript tabs plugin</title>
-  <meta name="description" content="Just javascript tabs. Make it where you want. No dependencies. Lightweight. Customizable.">
+  <meta name="description" content="">
   <script
     src="https://code.jquery.com/jquery-3.1.1.js"
     integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
@@ -243,7 +243,7 @@
      * Set active tab
      */
 
-    var tabsSetActive = new Tabit(document.getElementById('tabs-set-active'), {buttonActiveClass: 'active', activeIndex: 1});
+    var tabsSetActive = new Tabit(document.getElementById('tabs-set-active'), {buttonActiveClass: 'active', active: 1});
 
 
     /**
@@ -303,15 +303,7 @@
     var tabsManual;
 
     function initManualTabs() {
-      tabsManual = new Tabit(
-        document.getElementById('tabs-manual'),
-        {
-          buttonActiveClass: 'active',
-          onDestroy: function () {
-            tabsManual = undefined; // don't forget to delete instance (and remove event handlers)
-          }
-        }
-      );
+      tabsManual = new Tabit(document.getElementById('tabs-manual'), { buttonActiveClass: 'active'});
     }
 
     initManualTabs();
@@ -339,7 +331,6 @@
     document.getElementById('tab-destroy').addEventListener('click', function () {
       tabsManual.destroy();
       console.log(tabsManual); // undefined
-      tabsManual.getActiveTab(); // Cannot read property 'getActiveTab' of undefined
     });
 
     document.getElementById('tab-reinit').addEventListener('click', initManualTabs);
