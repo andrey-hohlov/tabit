@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tabit</title>
+  <title>Tabit - JavaScript tabs plugin</title>
+  <meta name="description" content="Just javascript tabs. Make it where you want. No dependencies. Lightweight. Customizable.">
   <script
     src="https://code.jquery.com/jquery-3.1.1.js"
     integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
@@ -178,6 +179,44 @@
   </div>
   <i class="small">Look in console for result of `get active`.</i>
 </div>
+<!-- Tabs in tabs -->
+<div class="container mb-5">
+  <h3 class="mb-3">Tabs in tabs</h3>
+  <div id="tabs-parent" class="mb-2">
+    <nav class="btn-group mb-2">
+      <a href="#tabs-parent-1" class="btn btn-primary js-parent-tab">Tab 1</a>
+      <a href="#tabs-parent-2" class="btn btn-primary js-parent-tab">Tab 2</a>
+      <a href="#tabs-parent-3" class="btn btn-primary js-parent-tab">Tab 3</a>
+    </nav>
+    <div id="tabs-parent-1" class="card js-parent-content">
+      <div class="card-block">
+        <div id="tabs-child" class="mb-2">
+          <nav class="btn-group mb-2">
+            <a href="#tabs-child-1" class="btn btn-primary js-child-tab">Tab 1</a>
+            <a href="#tabs-child-2" class="btn btn-primary js-child-tab">Tab 2</a>
+            <a href="#tabs-child-3" class="btn btn-primary js-child-tab">Tab 3</a>
+          </nav>
+          <div id="tabs-child-1" class="card js-child-content">
+            <span class="card-block">Content of first child tab</span>
+          </div>
+          <div id="tabs-child-2" class="card js-child-content">
+            <span class="card-block">Content of second child tab</span>
+          </div>
+          <div id="tabs-child-3" class="card js-child-content">
+            <span class="card-block">Content of third child tab</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="tabs-parent-2" class="card js-parent-content">
+      <span class="card-block">Content of second tab</span>
+    </div>
+    <div id="tabs-parent-3" class="card js-parent-content">
+      <span class="card-block">Content of third tab</span>
+    </div>
+  </div>
+  <i class="small">Use different selectors for parent and child tabs.</i>
+</div>
 <!-- Footer -->
 <footer class="pb-5">
   <div class="container">
@@ -204,7 +243,7 @@
      * Set active tab
      */
 
-    var tabsSetActive = new Tabit(document.getElementById('tabs-set-active'), {buttonActiveClass: 'active', active: 1});
+    var tabsSetActive = new Tabit(document.getElementById('tabs-set-active'), {buttonActiveClass: 'active', activeIndex: 1});
 
 
     /**
@@ -298,10 +337,28 @@
     });
 
     document.getElementById('tab-destroy').addEventListener('click', function () {
-      tabsManual.destroy(tabsManual);
+      tabsManual.destroy();
+      console.log(tabsManual); // undefined
+      tabsManual.getActiveTab(); // Cannot read property 'getActiveTab' of undefined
     });
 
     document.getElementById('tab-reinit').addEventListener('click', initManualTabs);
+
+
+    /**
+     * Tabs in tabs
+     */
+
+    var tabsParent = new Tabit(document.getElementById('tabs-parent'), {
+      buttonActiveClass: 'active',
+      buttonSelector: '.js-parent-tab',
+      contentSelector: '.js-parent-content',
+    });
+    var tabsChild = new Tabit(document.getElementById('tabs-child'), {
+      buttonActiveClass: 'active',
+      buttonSelector: '.js-child-tab',
+      contentSelector: '.js-child-content',
+    });
   })();
 </script>
 </body>
