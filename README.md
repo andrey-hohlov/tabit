@@ -44,21 +44,21 @@ const tabit = new Tabit(element, options);
 
 ```javascript
 {
-  buttonSelector = 'a',
-  contentSelector = 'div',
-  buttonAttribute = 'href',
-  contentAttribute = 'id', 
-  buttonActiveClass = null,
-  contentActiveClass = null,
-  event = 'click',
-  activeIndex = 0,
-  toggleDisplay = true, 
-  closable = false,
-  beforeInit = null,
-  onInit = null,
-  beforeChange = null,
-  onChange = null, 
-  onDestroy = null
+  buttonSelector: 'a',
+  contentSelector: 'div',
+  buttonAttribute: 'href',
+  contentAttribute: 'id', 
+  buttonActiveClass: null,
+  contentActiveClass: null,
+  event: 'click',
+  activeIndex: 0,
+  toggleDisplay: true, 
+  closable: false,
+  beforeInit: null,
+  onInit: null,
+  beforeChange: null,
+  onChange: null, 
+  onDestroy: null
 }
 ```
 
