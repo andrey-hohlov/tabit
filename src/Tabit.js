@@ -227,9 +227,12 @@ class Tabit {
   }
 
   _eventHandler(event) {
-    const tabs = this.tabs;
     let target = event.target;
+    if (!target) return null;
+
+    const tabs = this.tabs;
     let tab;
+
     while (target !== this.element && !tab) {
       if (Tabit._domMatches(target, this.settings.buttonSelector)) {
         for (let i = 0, c = tabs.length; i < c; i += 1) {
@@ -239,6 +242,7 @@ class Tabit {
           }
         }
       }
+      if (!target.parentNode) return null;
       target = target.parentNode;
     }
 
