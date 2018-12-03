@@ -126,8 +126,8 @@ new Tabit(
   document.getElementById('tabs'),
   {
     buttonSelector: '[data-target]',
-    contentSelector: 'data-target',
-    buttonAttribute: '[data-content]',
+    contentSelector: '[data-content]',
+    buttonAttribute: 'data-target',
     contentAttribute: 'data-content',  
   }
 );
